@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react'
+import React,{useCallback, useEffect, useState} from 'react'
 import { useGlobalContext } from '../context'
 import {useParams} from "react-router-dom";
 import axios from "axios";
@@ -7,7 +7,7 @@ const SingleList = () => {
   const {selectedItem, setSelectedItem} = useGlobalContext();
   const [loading, setLoading] = useState(false);
   const {id}= useParams();
-  const fetchProductDetail = async () => {
+  const fetchProductDetail = useCallback(async () => {
     setLoading(true);
     const response = await axios
       .get(`https://fakestoreapi.com/products/${id}`)
@@ -16,7 +16,7 @@ const SingleList = () => {
       });
       setSelectedItem(response.data);
       setLoading(false);
-  };
+  },[id]);
   useEffect(()=>{
     fetchProductDetail();
   },[id])
@@ -31,7 +31,7 @@ const SingleList = () => {
             <div className="ui vertical divider">AND</div>
             <div className="middle aligned row">
               <div className="column lp">
-                <img className="ui fluid image" src={image} />
+                <img className="ui fluid image" src={image} alt={title} />
               </div>
               <div className="column rp">
                 <h1>{title}</h1>
